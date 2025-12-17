@@ -22,13 +22,19 @@ const App: React.FC = () => {
 
   // Data State
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('vv_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('vv_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
   });
+  
   const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('vv_cart');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('vv_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
   });
+
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -50,12 +56,13 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('vv_user');
   };
 
   const handleViewChange = (view: AppView) => {
     setCurrentView(view);
     setSelectedProduct(null);
-    setSearchQuery(''); // Clear search when navigating normally
+    setSearchQuery('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -100,7 +107,7 @@ const App: React.FC = () => {
   };
 
   // Memos for filtering
-  const skincareProducts = useMemo(() => PRODUCTS.filter(p => p.category === 'Skincare' || p.category === 'Serums' || p.category === 'Masks'), []);
+  const skincareProducts = useMemo(() => PRODUCTS.filter(p => ['Skincare', 'Serums', 'Masks'].includes(p.category)), []);
   const lipcareProducts = useMemo(() => PRODUCTS.filter(p => p.category === 'Lipcare'), []);
   
   const searchResults = useMemo(() => {
@@ -113,11 +120,10 @@ const App: React.FC = () => {
     );
   }, [searchQuery]);
 
-  // New arrivals (last 4 products in catalog)
   const newArrivals = useMemo(() => [...PRODUCTS].slice(-4).reverse(), []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-blonde-light">
       <Navbar 
         user={user} 
         cartItems={cart} 
@@ -132,10 +138,15 @@ const App: React.FC = () => {
 
       <main className="flex-1">
         {currentView === 'home' && (
-          <>
+          <div className="animate-in fade-in duration-1000">
             <Hero />
-            <section className="container mx-auto px-6 py-20">
-              <h2 className="text-4xl font-serif text-burgundy mb-12 text-center">The Essentials</h2>
+            
+            {/* Essentials Section */}
+            <section className="container mx-auto px-6 py-24">
+              <div className="text-center mb-16 space-y-4">
+                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">The Signature Series</span>
+                <h2 className="text-5xl font-serif text-burgundy italic">Everyday Essentials</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
                 {PRODUCTS.slice(0, 3).map(product => (
                   <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
@@ -149,23 +160,36 @@ const App: React.FC = () => {
               onViewDetails={handleViewProduct} 
             />
 
-            <section className="container mx-auto px-6 py-20">
-              <div className="text-center">
-                 <button onClick={() => handleViewChange('skincare')} className="text-burgundy font-bold uppercase tracking-widest border-b-2 border-burgundy pb-1 hover:text-burgundy-light hover:border-burgundy-light transition-all">
-                   Shop All Collections
-                 </button>
+            {/* Newsletter / Club Section */}
+            <section className="bg-burgundy py-24 text-blonde">
+              <div className="container mx-auto px-6 text-center max-w-3xl">
+                <h3 className="text-4xl font-serif italic mb-6">Join the Collective</h3>
+                <p className="text-blonde/60 mb-10 leading-relaxed text-lg">
+                  Subscribe for exclusive access to small-batch drops, botanical insights, and our seasonal "Radiance" digital journal.
+                </p>
+                <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+                  <input 
+                    type="email" 
+                    placeholder="E.g. isabella@velvet.com" 
+                    className="flex-1 bg-white/10 border border-white/20 rounded-full px-6 py-4 focus:outline-none focus:ring-2 focus:ring-blonde/50 transition-all text-blonde placeholder-blonde/30"
+                  />
+                  <button className="bg-blonde text-burgundy px-8 py-4 rounded-full font-bold hover:bg-blonde-dark transition-all shadow-xl">
+                    Subscribe
+                  </button>
+                </form>
               </div>
             </section>
-          </>
+          </div>
         )}
 
         {currentView === 'skincare' && (
-          <section className="container mx-auto px-6 py-20 animate-in fade-in duration-500">
-             <div className="mb-12">
-                <h1 className="text-5xl font-serif text-burgundy mb-4">Skincare Collection</h1>
-                <p className="text-burgundy/60 max-w-2xl">From powerful serums to soothing cleansers, discover the formulas that will transform your skin's health.</p>
+          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <div className="mb-16">
+                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
+                <h1 className="text-6xl font-serif text-burgundy italic mb-4">Botanical Skincare</h1>
+                <p className="text-burgundy/60 max-w-2xl text-lg">Harnessing the restorative power of nature for a ritual that transforms the skin and calms the soul.</p>
              </div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                {skincareProducts.map(product => (
                  <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
                ))}
@@ -174,12 +198,13 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'lipcare' && (
-          <section className="container mx-auto px-6 py-20 animate-in fade-in duration-500">
-             <div className="mb-12">
-                <h1 className="text-5xl font-serif text-burgundy mb-4">Lipcare Essentials</h1>
-                <p className="text-burgundy/60 max-w-2xl">Exfoliate, hydrate, and tint with our curated range of luxury lip treatments.</p>
+          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <div className="mb-16">
+                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
+                <h1 className="text-6xl font-serif text-burgundy italic mb-4">Luxury Lipcare</h1>
+                <p className="text-burgundy/60 max-w-2xl text-lg">From restorative overnight masks to sheer botanical tints, every sweep is a moment of pure hydration.</p>
              </div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                {lipcareProducts.map(product => (
                  <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
                ))}
@@ -188,30 +213,30 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'search' && (
-          <section className="container mx-auto px-6 py-20 animate-in fade-in duration-500 min-h-[70vh]">
-             <div className="mb-12">
+          <section className="container mx-auto px-6 py-24 animate-in fade-in duration-500 min-h-[70vh]">
+             <div className="mb-16">
                 <h1 className="text-4xl font-serif text-burgundy mb-2">Search Results</h1>
                 <p className="text-burgundy/60">
                   {searchResults.length > 0 
-                    ? `We found ${searchResults.length} essentials matching "${searchQuery}"`
-                    : `No matches found for "${searchQuery}"`}
+                    ? `Found ${searchResults.length} matches for "${searchQuery}"`
+                    : `No matches for "${searchQuery}"`}
                 </p>
              </div>
 
              {searchResults.length > 0 ? (
-               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                  {searchResults.map(product => (
                    <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
                  ))}
                </div>
              ) : (
                <div className="flex flex-col items-center justify-center py-24 text-center">
-                 <div className="w-24 h-24 bg-blonde rounded-full flex items-center justify-center mb-8">
+                 <div className="w-24 h-24 bg-blonde rounded-full flex items-center justify-center mb-8 shadow-inner">
                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-burgundy/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                    </svg>
                  </div>
-                 <h2 className="text-3xl font-serif text-burgundy mb-4 italic">Alas, no matches.</h2>
+                 <h2 className="text-3xl font-serif text-burgundy mb-4 italic">Alas, no matches found.</h2>
                  <p className="text-burgundy/60 max-w-md mb-12">
                    We couldn't find any botanical essentials matching your query. May we suggest exploring our signature collections instead?
                  </p>
@@ -219,29 +244,20 @@ const App: React.FC = () => {
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl">
                     <button 
                       onClick={() => handleViewChange('skincare')}
-                      className="group p-8 bg-white border border-burgundy/5 rounded-2xl hover:border-burgundy/20 hover:shadow-xl transition-all text-left"
+                      className="group p-8 bg-white border border-burgundy/5 rounded-3xl hover:border-burgundy/20 hover:shadow-2xl transition-all text-left"
                     >
-                      <h3 className="font-serif text-xl text-burgundy mb-2 group-hover:italic">Skincare</h3>
-                      <p className="text-sm text-burgundy/50 mb-4 leading-relaxed">Discover cleansers, serums, and masks for a radiant complexion.</p>
-                      <span className="text-xs font-bold uppercase tracking-widest text-burgundy-light group-hover:translate-x-1 transition-transform inline-block">Explore →</span>
+                      <h3 className="font-serif text-2xl text-burgundy mb-2 group-hover:italic transition-all">Skincare</h3>
+                      <p className="text-sm text-burgundy/50 mb-6 leading-relaxed">Discover cleansers, serums, and masks for a radiant, balanced complexion.</p>
+                      <span className="text-xs font-bold uppercase tracking-widest text-burgundy-light group-hover:translate-x-1 transition-transform inline-block">Explore Collection →</span>
                     </button>
                     
                     <button 
                       onClick={() => handleViewChange('lipcare')}
-                      className="group p-8 bg-white border border-burgundy/5 rounded-2xl hover:border-burgundy/20 hover:shadow-xl transition-all text-left"
+                      className="group p-8 bg-white border border-burgundy/5 rounded-3xl hover:border-burgundy/20 hover:shadow-2xl transition-all text-left"
                     >
-                      <h3 className="font-serif text-xl text-burgundy mb-2 group-hover:italic">Lipcare</h3>
-                      <p className="text-sm text-burgundy/50 mb-4 leading-relaxed">Hydrating tints and restorative masks for perfect lips.</p>
-                      <span className="text-xs font-bold uppercase tracking-widest text-burgundy-light group-hover:translate-x-1 transition-transform inline-block">Explore →</span>
-                    </button>
-                 </div>
-
-                 <div className="mt-16">
-                    <button 
-                      onClick={() => handleViewChange('home')}
-                      className="text-burgundy/40 text-sm uppercase tracking-widest hover:text-burgundy transition-colors"
-                    >
-                      Return to Homepage
+                      <h3 className="font-serif text-2xl text-burgundy mb-2 group-hover:italic transition-all">Lipcare</h3>
+                      <p className="text-sm text-burgundy/50 mb-6 leading-relaxed">Hydrating tints and restorative masks crafted for perfection.</p>
+                      <span className="text-xs font-bold uppercase tracking-widest text-burgundy-light group-hover:translate-x-1 transition-transform inline-block">Explore Collection →</span>
                     </button>
                  </div>
                </div>
@@ -259,55 +275,49 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-burgundy-dark text-blonde/40 py-12 px-6 border-t border-blonde/10">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+      <footer className="bg-burgundy-dark text-blonde/40 py-20 px-6 border-t border-blonde/10">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-16">
           <div className="col-span-1 md:col-span-1">
-             <div className="text-blonde text-2xl font-serif font-bold mb-4">Velvet & Vine</div>
-             <p className="text-sm leading-relaxed max-w-xs">Elevating your daily self-care rituals with the finest botanical ingredients and elegant formulations.</p>
+             <div className="text-blonde text-3xl font-serif font-bold mb-6 italic">Velvet & Vine</div>
+             <p className="text-sm leading-relaxed max-w-xs mb-8">
+               Elevating your daily self-care rituals with the finest botanical ingredients and elegant, scientifically-proven formulations.
+             </p>
+             <p className="text-[10px] uppercase tracking-widest text-blonde/20">© 2024 Velvet & Vine Atelier. All rights reserved.</p>
           </div>
           <div>
-            <h4 className="text-blonde uppercase tracking-widest text-xs font-bold mb-6">Explore</h4>
-            <ul className="space-y-4 text-sm text-left">
-              <li><button onClick={() => handleViewChange('skincare')} className="hover:text-blonde transition-colors">Skincare</button></li>
-              <li><button onClick={() => handleViewChange('lipcare')} className="hover:text-blonde transition-colors">Lipcare</button></li>
-              <li><button onClick={() => handleViewChange('about')} className="hover:text-blonde transition-colors">Our Story</button></li>
+            <h4 className="text-blonde uppercase tracking-widest text-xs font-bold mb-8">Collections</h4>
+            <ul className="space-y-5 text-sm">
+              <li><button onClick={() => handleViewChange('skincare')} className="hover:text-blonde transition-colors">Skincare Essentials</button></li>
+              <li><button onClick={() => handleViewChange('lipcare')} className="hover:text-blonde transition-colors">Lipcare Treatments</button></li>
+              <li><button onClick={() => handleViewChange('about')} className="hover:text-blonde transition-colors">The Philosophy</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-blonde uppercase tracking-widest text-xs font-bold mb-6">Customer Care</h4>
-            <ul className="space-y-4 text-sm text-left">
+            <h4 className="text-blonde uppercase tracking-widest text-xs font-bold mb-8">Boutique Concierge</h4>
+            <ul className="space-y-5 text-sm">
               <li><button onClick={() => handleViewChange('shipping')} className="hover:text-blonde transition-colors text-left">Shipping & Returns</button></li>
-              <li><button onClick={() => handleViewChange('faq')} className="hover:text-blonde transition-colors text-left">FAQ</button></li>
-              <li><button onClick={() => handleViewChange('contact')} className="hover:text-blonde transition-colors text-left">Contact Us</button></li>
+              <li><button onClick={() => handleViewChange('faq')} className="hover:text-blonde transition-colors text-left">The Inquiry Bureau</button></li>
+              <li><button onClick={() => handleViewChange('contact')} className="hover:text-blonde transition-colors text-left">Connect with Us</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-blonde uppercase tracking-widest text-xs font-bold mb-6">Social</h4>
-            <div className="flex space-x-4">
-               <a 
-                href="https://www.instagram.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                aria-label="Follow us on Instagram"
-                className="w-10 h-10 border border-blonde/20 rounded-full flex items-center justify-center hover:bg-blonde hover:text-burgundy transition-all cursor-pointer"
-               >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            <h4 className="text-blonde uppercase tracking-widest text-xs font-bold mb-8">Social Gallery</h4>
+            <div className="flex space-x-6">
+               <a href="#" className="w-12 h-12 border border-blonde/10 rounded-full flex items-center justify-center hover:bg-blonde hover:text-burgundy transition-all transform hover:-translate-y-1">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                </a>
-               <a 
-                href="https://www.tiktok.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                aria-label="Follow us on TikTok"
-                className="w-10 h-10 border border-blonde/20 rounded-full flex items-center justify-center hover:bg-blonde hover:text-burgundy transition-all cursor-pointer"
-               >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+               <a href="#" className="w-12 h-12 border border-blonde/10 rounded-full flex items-center justify-center hover:bg-blonde hover:text-burgundy transition-all transform hover:-translate-y-1">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+               </a>
+               <a href="#" className="w-12 h-12 border border-blonde/10 rounded-full flex items-center justify-center hover:bg-blonde hover:text-burgundy transition-all transform hover:-translate-y-1">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
                </a>
             </div>
           </div>
         </div>
       </footer>
 
-      {/* Modals */}
+      {/* Overlays */}
       {isAuthOpen && <AuthModal onClose={() => setIsAuthOpen(false)} onLogin={handleLogin} />}
       <CartDrawer 
         isOpen={isCartOpen} 
