@@ -6,7 +6,7 @@ const AboutPage: React.FC = () => {
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="relative h-[400px] flex items-center justify-center bg-burgundy overflow-hidden">
         <img 
-           src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?q=80&w=2000&auto=format&fit=crop" 
+           src="https://i.pinimg.com/1200x/e5/f6/88/e5f688af7864dc26dfe619a641e22869.jpg" 
            alt="Skincare Collection" 
            className="absolute inset-0 w-full h-full object-cover opacity-30"
         />
@@ -22,11 +22,11 @@ const AboutPage: React.FC = () => {
                 Velvet & Vine was born from a simple realization: the modern skincare ritual has become unnecessarily complex and synthetic. We returned to the basics of hydration to find ingredients that have nourished skin for centuries.
               </p>
             </div>
-            <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d521?q=80&w=800&auto=format&fit=crop" className="rounded-2xl shadow-xl aspect-square object-cover" alt="Skincare Product Shot" />
+            <img src="https://i.pinimg.com/736x/aa/25/8e/aa258e97e37aa5ed09904b744e2830ac.jpg" className="rounded-2xl shadow-xl aspect-square object-cover" alt="Skincare Product Shot" />
           </section>
 
           <section className="grid md:grid-cols-2 gap-16 items-center">
-            <img src="https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=800&auto=format&fit=crop" className="rounded-2xl shadow-xl aspect-square object-cover md:order-2" alt="Cream Texture" />
+            <img src="https://i.pinimg.com/1200x/e5/f6/88/e5f688af7864dc26dfe619a641e22869.jpg" className="rounded-2xl shadow-xl aspect-square object-cover md:order-2" alt="Cream Texture" />
             <div className="space-y-6 md:order-1">
               <h2 className="text-4xl font-serif text-burgundy italic">The Science of Texture</h2>
               <p className="text-lg text-burgundy/70 leading-relaxed">

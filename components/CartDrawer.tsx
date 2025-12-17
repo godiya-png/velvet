@@ -8,9 +8,10 @@ interface CartDrawerProps {
   items: CartItem[];
   onUpdateQuantity: (id: string, delta: number) => void;
   onRemove: (id: string) => void;
+  onCheckout: () => void;
 }
 
-const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onUpdateQuantity, onRemove }) => {
+const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onUpdateQuantity, onRemove, onCheckout }) => {
   const subtotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   if (!isOpen) return null;
@@ -40,7 +41,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onUpdat
           ) : (
             items.map(item => (
               <div key={item.id} className="flex space-x-4 border-b border-burgundy/5 pb-6">
-                {/* Changed item.image to item.images[0] as per Product type definition */}
                 <img src={item.images[0]} alt={item.name} className="w-20 h-20 object-cover rounded shadow" />
                 <div className="flex-1">
                   <h3 className="font-bold text-burgundy">{item.name}</h3>
@@ -73,7 +73,10 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onUpdat
               <span>${subtotal.toFixed(2)}</span>
             </div>
             <p className="text-xs text-burgundy/60">Shipping and taxes calculated at checkout.</p>
-            <button className="w-full bg-burgundy text-blonde py-4 font-bold rounded shadow-lg hover:bg-burgundy-dark transition-all">
+            <button 
+              onClick={onCheckout}
+              className="w-full bg-burgundy text-blonde py-4 font-bold rounded shadow-lg hover:bg-burgundy-dark transition-all"
+            >
               Proceed to Checkout
             </button>
           </div>

@@ -31,4 +31,4 @@ export interface CartItem extends Product {
   quantity: number;
 }
 
-export type AppView = 'home' | 'skincare' | 'lipcare' | 'about' | 'product' | 'search' | 'contact' | 'shipping' | 'faq';
+export type AppView = 'home' | 'skincare' | 'lipcare' | 'about' | 'product' | 'search' | 'contact' | 'shipping' | 'faq' | 'checkout';

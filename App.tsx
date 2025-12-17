@@ -12,6 +12,7 @@ import AboutPage from './components/AboutPage';
 import ContactPage from './components/ContactPage';
 import ShippingPage from './components/ShippingPage';
 import FAQPage from './components/FAQPage';
+import CheckoutPage from './components/CheckoutPage';
 import NewArrivalsCarousel from './components/NewArrivalsCarousel';
 
 const App: React.FC = () => {
@@ -104,6 +105,12 @@ const App: React.FC = () => {
 
   const removeFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleCheckoutComplete = () => {
+    setCart([]);
+    setCurrentView('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Memos for filtering
@@ -269,6 +276,7 @@ const App: React.FC = () => {
         {currentView === 'contact' && <ContactPage />}
         {currentView === 'shipping' && <ShippingPage />}
         {currentView === 'faq' && <FAQPage />}
+        {currentView === 'checkout' && <CheckoutPage cartItems={cart} onComplete={handleCheckoutComplete} />}
 
         {currentView === 'product' && selectedProduct && (
           <ProductDetail product={selectedProduct} onAddToCart={addToCart} />
@@ -325,6 +333,7 @@ const App: React.FC = () => {
         items={cart}
         onUpdateQuantity={updateCartQuantity}
         onRemove={removeFromCart}
+        onCheckout={() => { setIsCartOpen(false); handleViewChange('checkout'); }}
       />
     </div>
   );
