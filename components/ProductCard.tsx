@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full border border-burgundy/5">
+    <div className="group bg-white rounded-xl shadow-sm hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 ease-out overflow-hidden flex flex-col h-full border border-burgundy/5">
       <div 
         className="relative aspect-square overflow-hidden bg-blonde cursor-pointer"
         onClick={() => onViewDetails(product)}

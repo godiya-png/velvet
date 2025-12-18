@@ -274,20 +274,20 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'skincare' && (
-          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <section className="container mx-auto px-6 py-24">
              <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-8">
-                <div>
-                   <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
-                   <h1 className="text-6xl font-serif text-burgundy italic mb-4">Botanical Skincare</h1>
-                   <p className="text-burgundy/60 max-w-2xl text-lg">Harnessing the restorative power of nature for a ritual that transforms the skin and calms the soul.</p>
+                <div className="space-y-4">
+                   <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs block animate-in fade-in slide-in-from-top-4 duration-700">Collection</span>
+                   <h1 className="text-6xl font-serif text-burgundy italic mb-4 animate-in fade-in slide-in-from-left-8 duration-1000 delay-200">Botanical Skincare</h1>
+                   <p className="text-burgundy/60 max-w-2xl text-lg animate-in fade-in duration-1000 delay-300">Harnessing the restorative power of nature for a ritual that transforms the skin and calms the soul.</p>
                 </div>
                 {/* Filter Dropdown/Pills */}
-                <div className="flex flex-wrap gap-3">
-                  {skincareFilterOptions.map(option => (
+                <div className="flex flex-wrap gap-3 animate-in fade-in slide-in-from-right-8 duration-700 delay-500">
+                  {skincareFilterOptions.map((option, idx) => (
                     <button
                       key={option}
                       onClick={() => setSkincareFilter(option)}
-                      className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border ${
+                      className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border animate-in fade-in scale-95 delay-[${600 + idx * 50}ms] ${
                         skincareFilter === option 
                           ? 'bg-burgundy text-blonde border-burgundy shadow-lg' 
                           : 'bg-white text-burgundy/40 border-burgundy/10 hover:border-burgundy/30 hover:text-burgundy'
@@ -304,8 +304,8 @@ const App: React.FC = () => {
                  {skincareProducts.map((product, idx) => (
                    <div 
                      key={`${product.id}-${skincareFilter}`} 
-                     className="animate-in fade-in slide-in-from-bottom-10 fill-mode-both"
-                     style={{ animationDelay: `${idx * 150}ms`, animationDuration: '800ms' }}
+                     className="animate-in fade-in slide-in-from-bottom-12 fill-mode-both"
+                     style={{ animationDelay: `${idx * 100}ms`, animationDuration: '900ms' }}
                    >
                      <ProductCard 
                        product={product} 
@@ -326,18 +326,18 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'lipcare' && (
-          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-             <div className="mb-16">
-                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
-                <h1 className="text-6xl font-serif text-burgundy italic mb-4">Luxury Lipcare</h1>
-                <p className="text-burgundy/60 max-w-2xl text-lg">From restorative overnight masks to sheer botanical tints, every sweep is a moment of pure hydration.</p>
+          <section className="container mx-auto px-6 py-24">
+             <div className="mb-16 space-y-4">
+                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs block animate-in fade-in slide-in-from-top-4 duration-700">Collection</span>
+                <h1 className="text-6xl font-serif text-burgundy italic mb-4 animate-in fade-in slide-in-from-left-8 duration-1000 delay-200">Luxury Lipcare</h1>
+                <p className="text-burgundy/60 max-w-2xl text-lg animate-in fade-in duration-1000 delay-300">From restorative overnight masks to sheer botanical tints, every sweep is a moment of pure hydration.</p>
              </div>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                {lipcareProducts.map((product, idx) => (
                  <div 
                   key={product.id}
-                  className="animate-in fade-in slide-in-from-bottom-10 fill-mode-both"
-                  style={{ animationDelay: `${idx * 150}ms`, animationDuration: '800ms' }}
+                  className="animate-in fade-in slide-in-from-bottom-12 fill-mode-both"
+                  style={{ animationDelay: `${idx * 100}ms`, animationDuration: '900ms' }}
                  >
                    <ProductCard 
                     product={product} 
