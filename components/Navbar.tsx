@@ -5,6 +5,7 @@ import { User, CartItem, AppView } from '../types';
 interface NavbarProps {
   user: User | null;
   cartItems: CartItem[];
+  wishlistCount: number;
   currentView: AppView;
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -17,6 +18,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ 
   user, 
   cartItems, 
+  wishlistCount,
   currentView, 
   searchQuery,
   onSearchChange,
@@ -95,6 +97,18 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Actions */}
         <div className="flex items-center space-x-3 sm:space-x-6 flex-shrink-0">
+          {/* Wishlist Icon */}
+          <div className="relative cursor-pointer group" onClick={() => onViewChange('wishlist')}>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 group-hover:text-blonde-dark transition-colors ${currentView === 'wishlist' ? 'text-blonde-dark' : ''}`} fill={currentView === 'wishlist' ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-blonde-dark text-burgundy text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-burgundy">
+                {wishlistCount}
+              </span>
+            )}
+          </div>
+
           <div className="relative cursor-pointer group" onClick={onOpenCart}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 group-hover:text-blonde-dark transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -107,15 +121,15 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {user ? (
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <button 
+              onClick={() => onViewChange('account')}
+              className={`flex items-center space-x-2 group hover:text-blonde-dark transition-colors ${currentView === 'account' ? 'text-blonde-dark' : ''}`}
+            >
+              <div className="w-8 h-8 rounded-full bg-blonde text-burgundy flex items-center justify-center font-bold text-xs uppercase shadow-inner">
+                {user.firstName[0]}{user.lastName[0] || ''}
+              </div>
               <span className="text-xs sm:text-sm font-medium hidden sm:inline">Hi, {user.firstName}</span>
-              <button 
-                onClick={onLogout}
-                className="text-[10px] sm:text-xs uppercase tracking-tighter bg-blonde text-burgundy px-2 sm:px-3 py-1 rounded hover:bg-blonde-dark transition-colors"
-              >
-                Logout
-              </button>
-            </div>
+            </button>
           ) : (
             <button 
               onClick={onOpenAuth}
@@ -163,6 +177,12 @@ const Navbar: React.FC<NavbarProps> = ({
                   {link.label}
                 </button>
               ))}
+              <button 
+                onClick={() => handleMobileNavClick('wishlist')}
+                className={`text-xl font-serif text-left pb-2 border-b border-burgundy/5 transition-colors ${currentView === 'wishlist' ? 'text-burgundy font-bold' : 'text-burgundy/60'}`}
+              >
+                Wishlist ({wishlistCount})
+              </button>
               
               <div className="mt-auto space-y-4">
                 {!user ? (
@@ -174,10 +194,10 @@ const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 ) : (
                   <button 
-                    onClick={() => { setIsMobileMenuOpen(false); onLogout(); }}
-                    className="w-full border border-burgundy text-burgundy py-3 rounded font-bold"
+                    onClick={() => handleMobileNavClick('account')}
+                    className="w-full bg-burgundy text-blonde py-3 rounded font-bold"
                   >
-                    Logout
+                    My Account / Logout
                   </button>
                 )}
                 <p className="text-center text-[10px] uppercase tracking-widest text-burgundy/40">Luxury Skincare Collective</p>

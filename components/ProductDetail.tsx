@@ -5,9 +5,16 @@ import { Product, Review } from '../types';
 interface ProductDetailProps {
   product: Product;
   onAddToCart: (p: Product, quantity: number) => void;
+  isWishlisted?: boolean;
+  onToggleWishlist?: (p: Product) => void;
 }
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart }) => {
+const ProductDetail: React.FC<ProductDetailProps> = ({ 
+  product, 
+  onAddToCart,
+  isWishlisted = false,
+  onToggleWishlist
+}) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   
@@ -99,6 +106,16 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onAddToCart }) =
                 </button>
               </>
             )}
+            <button 
+              onClick={() => onToggleWishlist?.(product)}
+              className={`absolute top-6 right-6 p-4 rounded-full shadow-2xl transition-all z-20 ${
+                isWishlisted ? 'bg-burgundy text-blonde' : 'bg-white text-burgundy hover:bg-burgundy hover:text-blonde'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${isWishlisted ? 'fill-current' : 'fill-none'}`} viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
           </div>
           
           <div className="flex space-x-4 overflow-x-auto pb-2">

@@ -154,7 +154,7 @@ export const PRODUCTS: Product[] = [
     description: 'An exquisitely weightless lip tint that provides a soft-focus crimson flush. Formulated with botanical pigments for a natural, petal-soft finish.',
     price: 32,
     category: 'Lipcare',
-    images: ['https://i.pinimg.com/736x/b6/8f/d8/b68fd811331eabde7967a7233d513ed7.jpg'],
+    images: ['https://i.pinimg.com/1200x/7e/f6/7c/7ef67c26da3a32b4192c9a9270570560.jpg'],
     rating: 5.0,
     ingredients: ['Beetroot Extract', 'Cocoa Butter', 'Vitamin E', 'Sunflower Seed Oil'],
     howToUse: 'Dab onto the center of lips and blend outward with fingertips for a diffused, romantic look.'
@@ -165,7 +165,7 @@ export const PRODUCTS: Product[] = [
     description: 'A decadently rich lip butter that melts on contact. Infused with peony extracts to soothe and deeply moisturize even the most delicate lips.',
     price: 28,
     category: 'Lipcare',
-    images: ['https://i.pinimg.com/736x/bd/f5/3c/bdf53c3f5a2c46b1b6546228d50fd5f5.jpg'],
+    images: ['https://i.pinimg.com/736x/62/53/9f/62539fe0db9f06145088751d0aae7cd4.jpg'],
     rating: 4.9,
     ingredients: ['Peony Stem Cells', 'Mango Butter', 'Squalane', 'Beeswax'],
     howToUse: 'Apply a generous layer as needed throughout the day or as a protective base under lip color.'
@@ -176,7 +176,7 @@ export const PRODUCTS: Product[] = [
     description: 'A high-vibrancy gloss that delivers mirror-like shine without the stickiness. Packed with antioxidant-rich berry oils for healthy, plump lips.',
     price: 30,
     category: 'Lipcare',
-    images: ['https://i.pinimg.com/736x/1b/bc/0d/1bbc0d0107ba8ceee7391159cd8f3a8e.jpg'],
+    images: ['https://i.pinimg.com/736x/96/3d/d3/963dd30c8ee68fc975e5cf63e5823d4b.jpg'],
     rating: 4.8,
     ingredients: ['Raspberry Seed Oil', 'Cloudberry Extract', 'Hyaluronic Acid', 'Jojoba'],
     howToUse: 'Sweep over bare lips or layer over your favorite tint for an added dimension of shine.'
@@ -187,7 +187,7 @@ export const PRODUCTS: Product[] = [
     description: 'A transformative lip treatment infused with microscopic rose quartz particles. Provides intense, long-lasting hydration and a subtle, crystalline glow.',
     price: 35,
     category: 'Lipcare',
-    images: ['https://i.pinimg.com/1200x/a5/53/b3/a553b32e91f4eb04669ccbdb129aec77.jpg'],
+    images: ['https://i.pinimg.com/1200x/23/cf/2d/23cf2d35518ac7f34a4ed927c72814c2.jpg'],
     rating: 5.0,
     ingredients: ['Liquid Rose Quartz', 'Rosehip Oil', 'Peptides', 'Shea Butter'],
     howToUse: 'Apply every evening as the final step of your skincare ritual to wake up with rejuvenated lips.'
@@ -198,7 +198,7 @@ export const PRODUCTS: Product[] = [
     description: 'A luxurious, ultra-glossy lip treatment that provides intense shine with a hint of romantic rose tint.',
     price: 26,
     category: 'Lipcare',
-    images: ['https://i.pinimg.com/736x/6e/54/14/6e54148901ac1bb10105d1ef783b8812.jpg'],
+    images: ['https://i.pinimg.com/1200x/16/06/39/16063911a4db891b7e8fdf52fa036dcd.jpg'],
     rating: 4.9,
     ingredients: ['Rosehip Oil', 'Squalane', 'Vitamin E'],
     howToUse: 'Apply directly to lips for a glass-like finish.'
@@ -209,7 +209,7 @@ export const PRODUCTS: Product[] = [
     description: 'An airy, whipped overnight treatment that melts into lips to repair and soften.',
     price: 28,
     category: 'Lipcare',
-    images: ['https://i.pinimg.com/736x/83/57/b0/8357b03d8de319bb0eb2367613c4f389.jpg'],
+    images: ['https://i.pinimg.com/1200x/23/ea/7b/23ea7bdae9ca1ed0bee2e311daaf82de.jpg'],
     rating: 5.0,
     ingredients: ['Shea Butter', 'Peony Extract', 'Hyaluronic Acid'],
     howToUse: 'Apply a generous layer before sleep.'

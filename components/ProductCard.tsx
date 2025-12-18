@@ -6,9 +6,24 @@ interface ProductCardProps {
   product: Product;
   onAddToCart: (p: Product) => void;
   onViewDetails: (p: Product) => void;
+  isWishlisted?: boolean;
+  onToggleWishlist?: (p: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewDetails }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  onAddToCart, 
+  onViewDetails,
+  isWishlisted = false,
+  onToggleWishlist
+}) => {
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onToggleWishlist) {
+      onToggleWishlist(product);
+    }
+  };
+
   return (
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col h-full border border-burgundy/5">
       <div 
@@ -21,8 +36,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewD
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute top-3 right-3">
-          <button className="p-2 bg-white/80 backdrop-blur rounded-full hover:bg-burgundy hover:text-blonde transition-colors shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button 
+            onClick={handleWishlistClick}
+            className={`p-2 rounded-full transition-all shadow-sm ${
+              isWishlisted 
+                ? 'bg-burgundy text-blonde' 
+                : 'bg-white/80 backdrop-blur hover:bg-burgundy hover:text-blonde'
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isWishlisted ? 'fill-current' : 'fill-none'}`} viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </button>

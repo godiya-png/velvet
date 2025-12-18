@@ -14,12 +14,17 @@ import ShippingPage from './components/ShippingPage';
 import FAQPage from './components/FAQPage';
 import CheckoutPage from './components/CheckoutPage';
 import NewArrivalsCarousel from './components/NewArrivalsCarousel';
+import NewsletterSuccessPage from './components/NewsletterSuccessPage';
+import WishlistPage from './components/WishlistPage';
+import AccountPage from './components/AccountPage';
 
 const App: React.FC = () => {
   // Navigation State
   const [currentView, setCurrentView] = useState<AppView>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [subscribedEmail, setSubscribedEmail] = useState('');
+  const [skincareFilter, setSkincareFilter] = useState<'All' | 'Skincare' | 'Serums' | 'Masks'>('All');
 
   // Data State
   const [user, setUser] = useState<User | null>(() => {
@@ -32,6 +37,13 @@ const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('vv_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+
+  const [wishlistIds, setWishlistIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('vv_wishlist');
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
@@ -67,6 +79,10 @@ const App: React.FC = () => {
     localStorage.setItem('vv_cart', JSON.stringify(cart));
   }, [cart]);
 
+  useEffect(() => {
+    localStorage.setItem('vv_wishlist', JSON.stringify(wishlistIds));
+  }, [wishlistIds]);
+
   // Handlers
   const handleLogin = (newUser: User) => {
     setUser(newUser);
@@ -76,12 +92,14 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('vv_user');
+    handleViewChange('home');
   };
 
   const handleViewChange = (view: AppView) => {
     setCurrentView(view);
     setSelectedProduct(null);
     setSearchQuery('');
+    setSkincareFilter('All');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -125,15 +143,39 @@ const App: React.FC = () => {
     setCart(prev => prev.filter(item => item.id !== id));
   };
 
+  const toggleWishlist = (product: Product) => {
+    setWishlistIds(prev => {
+      if (prev.includes(product.id)) {
+        return prev.filter(id => id !== product.id);
+      }
+      return [...prev, product.id];
+    });
+  };
+
   const handleCheckoutComplete = () => {
     setCart([]);
     setCurrentView('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+    if (email) {
+      setSubscribedEmail(email);
+      handleViewChange('newsletter-success');
+    }
+  };
+
   // Memos for filtering
-  const skincareProducts = useMemo(() => PRODUCTS.filter(p => ['Skincare', 'Serums', 'Masks'].includes(p.category)), []);
+  const skincareProducts = useMemo(() => {
+    const base = PRODUCTS.filter(p => ['Skincare', 'Serums', 'Masks'].includes(p.category));
+    if (skincareFilter === 'All') return base;
+    return base.filter(p => p.category === skincareFilter);
+  }, [skincareFilter]);
+
   const lipcareProducts = useMemo(() => PRODUCTS.filter(p => p.category === 'Lipcare'), []);
+  const wishlistedProducts = useMemo(() => PRODUCTS.filter(p => wishlistIds.includes(p.id)), [wishlistIds]);
   
   const searchResults = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -147,11 +189,14 @@ const App: React.FC = () => {
 
   const newArrivals = useMemo(() => [...PRODUCTS].slice(-4).reverse(), []);
 
+  const skincareFilterOptions: ('All' | 'Skincare' | 'Serums' | 'Masks')[] = ['All', 'Skincare', 'Serums', 'Masks'];
+
   return (
     <div className="min-h-screen flex flex-col bg-blonde-light">
       <Navbar 
         user={user} 
         cartItems={cart} 
+        wishlistCount={wishlistIds.length}
         currentView={currentView}
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
@@ -180,7 +225,13 @@ const App: React.FC = () => {
                     className="reveal-on-scroll" 
                     style={{ transitionDelay: `${idx * 200}ms` }}
                   >
-                    <ProductCard product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+                    <ProductCard 
+                      product={product} 
+                      onAddToCart={(p) => addToCart(p, 1)} 
+                      onViewDetails={handleViewProduct} 
+                      isWishlisted={wishlistIds.includes(product.id)}
+                      onToggleWishlist={toggleWishlist}
+                    />
                   </div>
                 ))}
               </div>
@@ -205,13 +256,15 @@ const App: React.FC = () => {
                 <p className="text-blonde/60 mb-12 leading-relaxed text-xl max-w-2xl mx-auto">
                   Subscribe for complimentary access to small-batch seasonal drops and our "Radiance" digital journal.
                 </p>
-                <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={handleSubscribe}>
                   <input 
+                    required
                     type="email" 
+                    name="email"
                     placeholder="E.g. isabella@velvet.com" 
                     className="flex-1 bg-white/5 border border-white/10 rounded-full px-8 py-5 focus:outline-none focus:ring-2 focus:ring-blonde-dark/50 transition-all text-blonde placeholder-blonde/20"
                   />
-                  <button className="bg-blonde text-burgundy px-12 py-5 rounded-full font-bold hover:bg-blonde-dark transition-all shadow-2xl uppercase tracking-widest text-xs">
+                  <button type="submit" className="bg-blonde text-burgundy px-12 py-5 rounded-full font-bold hover:bg-blonde-dark transition-all shadow-2xl uppercase tracking-widest text-xs">
                     Join Now
                   </button>
                 </form>
@@ -222,38 +275,100 @@ const App: React.FC = () => {
 
         {currentView === 'skincare' && (
           <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-             <div className="mb-16">
-                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
-                <h1 className="text-6xl font-serif text-burgundy italic mb-4">Botanical Skincare</h1>
-                <p className="text-burgundy/60 max-w-2xl text-lg">Harnessing the restorative power of nature for a ritual that transforms the skin and calms the soul.</p>
+             <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-8">
+                <div>
+                   <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
+                   <h1 className="text-6xl font-serif text-burgundy italic mb-4">Botanical Skincare</h1>
+                   <p className="text-burgundy/60 max-w-2xl text-lg">Harnessing the restorative power of nature for a ritual that transforms the skin and calms the soul.</p>
+                </div>
+                {/* Filter Dropdown/Pills */}
+                <div className="flex flex-wrap gap-3">
+                  {skincareFilterOptions.map(option => (
+                    <button
+                      key={option}
+                      onClick={() => setSkincareFilter(option)}
+                      className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border ${
+                        skincareFilter === option 
+                          ? 'bg-burgundy text-blonde border-burgundy shadow-lg' 
+                          : 'bg-white text-burgundy/40 border-burgundy/10 hover:border-burgundy/30 hover:text-burgundy'
+                      }`}
+                    >
+                      {option === 'Skincare' ? 'Essentials' : option}
+                    </button>
+                  ))}
+                </div>
              </div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-               {skincareProducts.map((product, idx) => (
-                 <div 
-                   key={product.id} 
-                   className="animate-in fade-in slide-in-from-bottom-10 fill-mode-both"
-                   style={{ animationDelay: `${idx * 150}ms`, animationDuration: '800ms' }}
-                 >
-                   <ProductCard product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
-                 </div>
-               ))}
-             </div>
+             
+             {skincareProducts.length > 0 ? (
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                 {skincareProducts.map((product, idx) => (
+                   <div 
+                     key={`${product.id}-${skincareFilter}`} 
+                     className="animate-in fade-in slide-in-from-bottom-10 fill-mode-both"
+                     style={{ animationDelay: `${idx * 150}ms`, animationDuration: '800ms' }}
+                   >
+                     <ProductCard 
+                       product={product} 
+                       onAddToCart={(p) => addToCart(p, 1)} 
+                       onViewDetails={handleViewProduct} 
+                       isWishlisted={wishlistIds.includes(product.id)}
+                       onToggleWishlist={toggleWishlist}
+                     />
+                   </div>
+                 ))}
+               </div>
+             ) : (
+               <div className="py-32 text-center animate-in fade-in">
+                  <p className="text-burgundy/40 italic text-lg">No products found in this sub-category.</p>
+               </div>
+             )}
           </section>
         )}
 
         {currentView === 'lipcare' && (
-          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-1000">
              <div className="mb-16">
                 <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
                 <h1 className="text-6xl font-serif text-burgundy italic mb-4">Luxury Lipcare</h1>
                 <p className="text-burgundy/60 max-w-2xl text-lg">From restorative overnight masks to sheer botanical tints, every sweep is a moment of pure hydration.</p>
              </div>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-               {lipcareProducts.map(product => (
-                 <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+               {lipcareProducts.map((product, idx) => (
+                 <div 
+                  key={product.id}
+                  className="animate-in fade-in slide-in-from-bottom-10 fill-mode-both"
+                  style={{ animationDelay: `${idx * 150}ms`, animationDuration: '800ms' }}
+                 >
+                   <ProductCard 
+                    product={product} 
+                    onAddToCart={(p) => addToCart(p, 1)} 
+                    onViewDetails={handleViewProduct} 
+                    isWishlisted={wishlistIds.includes(product.id)}
+                    onToggleWishlist={toggleWishlist}
+                   />
+                 </div>
                ))}
              </div>
           </section>
+        )}
+
+        {currentView === 'wishlist' && (
+          <WishlistPage 
+            items={wishlistedProducts}
+            wishlistIds={wishlistIds}
+            onAddToCart={(p) => addToCart(p, 1)}
+            onViewDetails={handleViewProduct}
+            onToggleWishlist={toggleWishlist}
+            onExplore={() => handleViewChange('skincare')}
+          />
+        )}
+
+        {currentView === 'account' && (
+          <AccountPage 
+            user={user} 
+            onLogout={handleLogout} 
+            onViewChange={handleViewChange} 
+          />
         )}
 
         {currentView === 'search' && (
@@ -270,7 +385,14 @@ const App: React.FC = () => {
              {searchResults.length > 0 ? (
                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
                  {searchResults.map(product => (
-                   <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+                   <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    onAddToCart={(p) => addToCart(p, 1)} 
+                    onViewDetails={handleViewProduct} 
+                    isWishlisted={wishlistIds.includes(product.id)}
+                    onToggleWishlist={toggleWishlist}
+                   />
                  ))}
                </div>
              ) : (
@@ -309,6 +431,13 @@ const App: React.FC = () => {
           </section>
         )}
 
+        {currentView === 'newsletter-success' && (
+          <NewsletterSuccessPage 
+            email={subscribedEmail} 
+            onContinue={() => handleViewChange('home')} 
+          />
+        )}
+
         {currentView === 'about' && <AboutPage />}
         {currentView === 'contact' && <ContactPage />}
         {currentView === 'shipping' && <ShippingPage />}
@@ -316,7 +445,12 @@ const App: React.FC = () => {
         {currentView === 'checkout' && <CheckoutPage cartItems={cart} onComplete={handleCheckoutComplete} />}
 
         {currentView === 'product' && selectedProduct && (
-          <ProductDetail product={selectedProduct} onAddToCart={addToCart} />
+          <ProductDetail 
+            product={selectedProduct} 
+            onAddToCart={addToCart} 
+            isWishlisted={wishlistIds.includes(selectedProduct.id)}
+            onToggleWishlist={toggleWishlist}
+          />
         )}
       </main>
 
