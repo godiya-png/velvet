@@ -25,8 +25,8 @@ const Hero: React.FC = () => {
       {/* Background Image Layer */}
       <div className="absolute inset-0 opacity-50 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1570172235301-49622aa16a39?q=80&w=2000&auto=format&fit=crop" 
-          alt="Premium Skincare Product" 
+          src="https://i.pinimg.com/1200x/a5/6c/3a/a56c3a0f4824ebb3a315ef723d02be53.jpg" 
+          alt="Premium Skincare Botanical Background" 
           className="w-full h-full object-cover"
         />
       </div>

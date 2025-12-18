@@ -2,7 +2,7 @@
 import { Product } from './types';
 
 export const PRODUCTS: Product[] = [
-  // --- New Premium Skincare Collection (Replacing Defaults) ---
+  // --- New Premium Skincare Collection ---
   {
     id: 's1',
     name: 'Opulent Orchid Facial Elixir',
@@ -69,8 +69,85 @@ export const PRODUCTS: Product[] = [
     ingredients: ['Pearl Powder', 'Ferulic Acid', 'Licorice Root', 'Alpha Arbutin'],
     howToUse: 'Gently massage 1 pump into skin until pearls dissolve and absorb completely.'
   },
+  {
+    id: 's7',
+    name: 'Amber Resin Infusion Oil',
+    description: 'A rare botanical oil that captures the warmth of sunlight. Rich in bio-active resins to firm and smooth the appearance of fine lines.',
+    price: 92,
+    category: 'Skincare',
+    images: ['https://i.pinimg.com/1200x/bc/5c/f7/bc5cf73b549a87c28217144513a9c74b.jpg'],
+    rating: 5.0,
+    ingredients: ['Amber Resin', 'Marula Oil', 'Vitamin A', 'Rosemary Extract'],
+    howToUse: 'Apply as the final step of your evening ritual to seal in moisture.'
+  },
+  {
+    id: 's8',
+    name: 'Velvet Petal Cleansing Milk',
+    description: 'An exceptionally soft, milky cleanser that melts away daily pollutants and makeup without disrupting the delicate acid mantle.',
+    price: 42,
+    category: 'Skincare',
+    images: ['https://i.pinimg.com/1200x/28/2a/e9/282ae981b384bf734648c6459ef8acbe.jpg'],
+    rating: 4.8,
+    ingredients: ['Rice Milk', 'White Petal Extract', 'Chamomile', 'Aloe'],
+    howToUse: 'Massage onto dry skin and emulsify with warm water before rinsing.'
+  },
+  {
+    id: 's9',
+    name: 'Silk Cocoon Regenerative Mask',
+    description: 'A decadent cream mask that wraps the skin in a cocoon of hydration. Promotes overnight cellular renewal for a refreshed morning look.',
+    price: 70,
+    category: 'Masks',
+    images: ['https://i.pinimg.com/1200x/ad/4f/cd/ad4fcd6100328b9236da472b80fdab60.jpg'],
+    rating: 4.9,
+    ingredients: ['Silk Proteins', 'Niacinamide', 'Squalane', 'Magnolia Bark'],
+    howToUse: 'Apply a thick layer twice weekly. Leave for 20 minutes or overnight.'
+  },
 
-  // --- Lipcare Collection (Retained from previous requests) ---
+  // --- Premium Lipcare Collection ---
+  {
+    id: 'l1',
+    name: 'Velvet Crimson Botanical Tint',
+    description: 'An exquisitely weightless lip tint that provides a soft-focus crimson flush. Formulated with botanical pigments for a natural, petal-soft finish.',
+    price: 32,
+    category: 'Lipcare',
+    images: ['https://i.pinimg.com/736x/b6/8f/d8/b68fd811331eabde7967a7233d513ed7.jpg'],
+    rating: 5.0,
+    ingredients: ['Beetroot Extract', 'Cocoa Butter', 'Vitamin E', 'Sunflower Seed Oil'],
+    howToUse: 'Dab onto the center of lips and blend outward with fingertips for a diffused, romantic look.'
+  },
+  {
+    id: 'l2',
+    name: 'Silk Peony Nourishing Butter',
+    description: 'A decadently rich lip butter that melts on contact. Infused with peony extracts to soothe and deeply moisturize even the most delicate lips.',
+    price: 28,
+    category: 'Lipcare',
+    images: ['https://i.pinimg.com/736x/bd/f5/3c/bdf53c3f5a2c46b1b6546228d50fd5f5.jpg'],
+    rating: 4.9,
+    ingredients: ['Peony Stem Cells', 'Mango Butter', 'Squalane', 'Beeswax'],
+    howToUse: 'Apply a generous layer as needed throughout the day or as a protective base under lip color.'
+  },
+  {
+    id: 'l3',
+    name: 'Luminous Berry Infusion Gloss',
+    description: 'A high-vibrancy gloss that delivers mirror-like shine without the stickiness. Packed with antioxidant-rich berry oils for healthy, plump lips.',
+    price: 30,
+    category: 'Lipcare',
+    images: ['https://i.pinimg.com/736x/1b/bc/0d/1bbc0d0107ba8ceee7391159cd8f3a8e.jpg'],
+    rating: 4.8,
+    ingredients: ['Raspberry Seed Oil', 'Cloudberry Extract', 'Hyaluronic Acid', 'Jojoba'],
+    howToUse: 'Sweep over bare lips or layer over your favorite tint for an added dimension of shine.'
+  },
+  {
+    id: 'l4',
+    name: 'Rose Quartz Hydration Treatment',
+    description: 'A transformative lip treatment infused with microscopic rose quartz particles. Provides intense, long-lasting hydration and a subtle, crystalline glow.',
+    price: 35,
+    category: 'Lipcare',
+    images: ['https://i.pinimg.com/1200x/a5/53/b3/a553b32e91f4eb04669ccbdb129aec77.jpg'],
+    rating: 5.0,
+    ingredients: ['Liquid Rose Quartz', 'Rosehip Oil', 'Peptides', 'Shea Butter'],
+    howToUse: 'Apply every evening as the final step of your skincare ritual to wake up with rejuvenated lips.'
+  },
   {
     id: '15',
     name: 'Rose Petal High-Shine Glaze',
