@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { User, CartItem, Product, AppView } from './types';
 import { PRODUCTS } from './constants';
 import Navbar from './components/Navbar';
@@ -38,6 +38,24 @@ const App: React.FC = () => {
 
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Intersection Observer for scroll animations
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const elements = document.querySelectorAll('.reveal-on-scroll');
+    elements.forEach(el => observerRef.current?.observe(el));
+
+    return () => observerRef.current?.disconnect();
+  }, [currentView]); // Re-observe when view changes
 
   // Persistence
   useEffect(() => {
@@ -149,39 +167,52 @@ const App: React.FC = () => {
             <Hero />
             
             {/* Essentials Section */}
-            <section className="container mx-auto px-6 py-24">
-              <div className="text-center mb-16 space-y-4">
-                <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">The Signature Series</span>
-                <h2 className="text-5xl font-serif text-burgundy italic">Everyday Essentials</h2>
+            <section className="container mx-auto px-6 py-28 reveal-on-scroll">
+              <div className="text-center mb-20 space-y-4">
+                <span className="text-burgundy-light font-bold tracking-[0.5em] uppercase text-xs">The Essence of Velvet</span>
+                <h2 className="text-5xl md:text-6xl font-serif text-burgundy italic">Everyday Essentials</h2>
+                <div className="w-24 h-px bg-burgundy/10 mx-auto mt-6"></div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-                {PRODUCTS.slice(0, 3).map(product => (
-                  <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
+                {PRODUCTS.slice(0, 3).map((product, idx) => (
+                  <div 
+                    key={product.id} 
+                    className="reveal-on-scroll" 
+                    style={{ transitionDelay: `${idx * 200}ms` }}
+                  >
+                    <ProductCard product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+                  </div>
                 ))}
               </div>
             </section>
 
-            <NewArrivalsCarousel 
-              products={newArrivals} 
-              onAddToCart={(p) => addToCart(p, 1)} 
-              onViewDetails={handleViewProduct} 
-            />
+            <div className="reveal-on-scroll">
+              <NewArrivalsCarousel 
+                products={newArrivals} 
+                onAddToCart={(p) => addToCart(p, 1)} 
+                onViewDetails={handleViewProduct} 
+              />
+            </div>
 
             {/* Newsletter / Club Section */}
-            <section className="bg-burgundy py-24 text-blonde">
-              <div className="container mx-auto px-6 text-center max-w-3xl">
-                <h3 className="text-4xl font-serif italic mb-6">Join the Collective</h3>
-                <p className="text-blonde/60 mb-10 leading-relaxed text-lg">
-                  Subscribe for exclusive access to small-batch drops, botanical insights, and our seasonal "Radiance" digital journal.
+            <section className="bg-burgundy py-32 text-blonde relative overflow-hidden reveal-on-scroll">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-blonde/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-blonde/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+              
+              <div className="container mx-auto px-6 text-center max-w-4xl relative z-10">
+                <span className="text-blonde-dark font-bold tracking-[0.4em] uppercase text-xs mb-6 block">Private Invitation</span>
+                <h3 className="text-5xl md:text-6xl font-serif italic mb-8">Join the Botanical Collective</h3>
+                <p className="text-blonde/60 mb-12 leading-relaxed text-xl max-w-2xl mx-auto">
+                  Subscribe for complimentary access to small-batch seasonal drops and our "Radiance" digital journal.
                 </p>
-                <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
                   <input 
                     type="email" 
                     placeholder="E.g. isabella@velvet.com" 
-                    className="flex-1 bg-white/10 border border-white/20 rounded-full px-6 py-4 focus:outline-none focus:ring-2 focus:ring-blonde/50 transition-all text-blonde placeholder-blonde/30"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-full px-8 py-5 focus:outline-none focus:ring-2 focus:ring-blonde-dark/50 transition-all text-blonde placeholder-blonde/20"
                   />
-                  <button className="bg-blonde text-burgundy px-8 py-4 rounded-full font-bold hover:bg-blonde-dark transition-all shadow-xl">
-                    Subscribe
+                  <button className="bg-blonde text-burgundy px-12 py-5 rounded-full font-bold hover:bg-blonde-dark transition-all shadow-2xl uppercase tracking-widest text-xs">
+                    Join Now
                   </button>
                 </form>
               </div>
@@ -190,15 +221,21 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'skincare' && (
-          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <section className="container mx-auto px-6 py-24 animate-in fade-in slide-in-from-bottom-4 duration-1000">
              <div className="mb-16">
                 <span className="text-burgundy-light font-bold tracking-[0.4em] uppercase text-xs">Collection</span>
                 <h1 className="text-6xl font-serif text-burgundy italic mb-4">Botanical Skincare</h1>
                 <p className="text-burgundy/60 max-w-2xl text-lg">Harnessing the restorative power of nature for a ritual that transforms the skin and calms the soul.</p>
              </div>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-               {skincareProducts.map(product => (
-                 <ProductCard key={product.id} product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+               {skincareProducts.map((product, idx) => (
+                 <div 
+                   key={product.id} 
+                   className="animate-in fade-in slide-in-from-bottom-10 fill-mode-both"
+                   style={{ animationDelay: `${idx * 150}ms`, animationDuration: '800ms' }}
+                 >
+                   <ProductCard product={product} onAddToCart={(p) => addToCart(p, 1)} onViewDetails={handleViewProduct} />
+                 </div>
                ))}
              </div>
           </section>

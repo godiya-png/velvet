@@ -4,6 +4,50 @@ import { Product } from './types';
 export const PRODUCTS: Product[] = [
   // --- New Premium Skincare Collection ---
   {
+    id: 's10',
+    name: 'Gilded Nectar Cleansing Oil',
+    description: 'A rich, golden oil that transforms into a silky milk upon contact with water. Effortlessly dissolves heavy makeup and impurities while leaving skin supple and luminous.',
+    price: 48,
+    category: 'Skincare',
+    images: ['https://i.pinimg.com/736x/43/d9/12/43d912fe191823d73d46aee73941106a.jpg'],
+    rating: 5.0,
+    ingredients: ['Calendula Oil', 'Apricot Kernel Oil', 'Vitamin E', 'Bergamot'],
+    howToUse: 'Massage 2-3 pumps onto dry face. Emulsify with warm water and rinse clean.'
+  },
+  {
+    id: 's11',
+    name: 'Midnight Rose Night Serum',
+    description: 'An intensive overnight treatment that harnesses the power of Black Rose and Retinol. Works with your skin\'s circadian rhythm to repair and firm while you sleep.',
+    price: 94,
+    category: 'Serums',
+    images: ['https://i.pinimg.com/1200x/65/47/15/6547159398519c751839ec020b90695b.jpg'],
+    rating: 4.9,
+    ingredients: ['Black Rose Extract', 'Encapsulated Retinol', 'Blue Tansy', 'Niacinamide'],
+    howToUse: 'Apply to clean skin in the evening before your moisturizer. Use SPF daily during use.'
+  },
+  {
+    id: 's12',
+    name: 'Crystal Quartz Hydrating Mist',
+    description: 'A refreshing facial mist infused with liquid quartz and Bulgarian Rose water. Provides an instant boost of hydration and sets makeup with a dewy finish.',
+    price: 36,
+    category: 'Skincare',
+    images: ['https://i.pinimg.com/736x/95/e6/83/95e683b026ccb17b21ae92edd2b84be2.jpg'],
+    rating: 4.8,
+    ingredients: ['Rose Water', 'Liquid Quartz', 'Aloe Vera', 'Glycerin'],
+    howToUse: 'Mist onto face throughout the day to refresh and hydrate. Can be used over makeup.'
+  },
+  {
+    id: 's13',
+    name: 'Botanical Bloom Barrier Balm',
+    description: 'A concentrated recovery balm for severely dry or compromised skin. Forms a protective botanical shield to lock in moisture and soothe irritation.',
+    price: 52,
+    category: 'Skincare',
+    images: ['https://i.pinimg.com/1200x/a4/0e/4b/a40e4b74e357ea67d95b6a2041f95b03.jpg'],
+    rating: 5.0,
+    ingredients: ['Cupuacu Butter', 'Ceramides', 'Bisabolol', 'Meadowfoam Seed Oil'],
+    howToUse: 'Warm a pea-sized amount between fingers and press into dry areas or all over as a final seal.'
+  },
+  {
     id: 's1',
     name: 'Opulent Orchid Facial Elixir',
     description: 'A transformative blend of rare orchid extracts and cold-pressed botanical oils. This elixir deeply replenishes the lipid barrier for an ageless, velvet-soft finish.',
